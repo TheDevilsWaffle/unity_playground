@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+// https://www.youtube.com/watch?v=cVy-NTjqZR8
 public enum MovementStatus
 {
     MAXSPEED,
@@ -12,13 +12,19 @@ public enum MovementStatus
 
 public class TestController : MonoBehaviour
 {
+    [SerializeField] Transform cam;
     [SerializeField] Rigidbody rigidbody;
     [SerializeField] KeyCode right = KeyCode.W;
+
     [SerializeField] float maxSpeed = 10f;
     [SerializeField] AnimationCurve accelerationCurve;
     [SerializeField] float accelerationRate = 5f;
     [SerializeField] AnimationCurve decelerationCurve;
     [SerializeField] float decelerationRate = 1f;
+
+    [SerializeField] float turnSpeed = 10f;
+    Quaternion targetRotation;
+
     
     MovementStatus movementStatus= MovementStatus.STOPPED;
     float currentVelocity;
@@ -35,6 +41,11 @@ public class TestController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        GetInput();
+    }
+
+    void GetInput()
+    {
         if(Input.GetKey(right))
         {
             Move();
@@ -44,6 +55,14 @@ public class TestController : MonoBehaviour
             Slow();
         }
     }
+
+    
+    void CalculateDirection()
+    {
+
+    }
+
+    
     void Move()
     {
         //stop decelerating
