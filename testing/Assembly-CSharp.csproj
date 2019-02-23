@@ -53,7 +53,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\TestController.cs" />
+     <Compile Include="Assets\Scripts\CameraController.cs" />
+     <Compile Include="Assets\Scripts\Events\EventsList.cs" />
+     <Compile Include="Assets\Scripts\Events\GameEvent.cs" />
+     <Compile Include="Assets\Scripts\InputData.cs" />
+     <Compile Include="Assets\Scripts\KeyboardGamepadLayout.cs" />
+     <Compile Include="Assets\Scripts\TestController.cs" />
  <Reference Include="Unity.TextMeshPro.Editor">
  <HintPath>D:/experiments/unity_playground/testing/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
  </Reference>

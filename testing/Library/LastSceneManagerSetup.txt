@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/isometric_player_controller.unity
+- path: Assets/Scenes/isometric_player_controller.unity
   isLoaded: 1
   isActive: 1
