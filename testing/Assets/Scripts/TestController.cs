@@ -66,6 +66,11 @@ public class TestController : MonoBehaviour
     {
         input.x = Input.GetAxisRaw("Horizontal");
         input.y = Input.GetAxisRaw("Vertical");
+
+        //if we've got input, continue and calculate direction. Otherwise, end here.
+        if(Mathf.Abs(input.x) < 1 && Mathf.Abs(input.y) < 1) return;
+
+        CalculateDirection();
     }
     /*////////////////////////////////////////////////////////////////////////////////////////////////*/
     /// <summary>
@@ -86,7 +91,7 @@ public class TestController : MonoBehaviour
     void Rotate()
     {
         targetRotation = Quaternion.Euler(0, angle, 0);
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
+        rb.MoveRotation(Quaternion.Slerp(transform.rotation, targetRotation, turnSpeed * Time.fixedDeltaTime));
     }
     /*////////////////////////////////////////////////////////////////////////////////////////////////*/
     /// <summary>
@@ -95,10 +100,28 @@ public class TestController : MonoBehaviour
     /*///////////////////////////////////////////////////////////////////////////////////////////////*/
     void Move()
     {
-        //transform.position += transform.forward * moveSpeed * Time.deltaTime;
-        rb.velocity = transform.forward * currentSpeed;
-        //rb.AddForce(transform.forward * moveSpeed * Time.deltaTime);
-        print(transform.forward);
+        //move w/o physics
+        //transform.position += transform.forward * currentSpeed * Time.deltaTime;
+        //print("move = " + transform.forward * maxSpeed * Time.deltaTime);
+
+        //move w/ physics, set velocity directly
+        //rb.velocity = transform.forward.normalized * currentSpeed * Time.deltaTime;
+        //print("velocity = " + transform.forward.normalized * currentSpeed);
+
+        //move w/ physics, smooth movement:
+        /*
+        https://docs.unity3d.com/ScriptReference/Rigidbody.MovePosition.html
+            If Rigidbody interpolation is enabled on the Rigidbody, calling Rigidbody.
+            MovePosition results in a smooth transition between the two positions in any 
+            intermediate frames rendered. This should be used if you want to continuously 
+            move a rigidbody in each FixedUpdate.
+
+            For this to work properly, the character's rigidbody needs to have:
+            isKinematic: ?
+            Interpolate: none
+            Collision Detection: Continuous
+         */
+        rb.MovePosition(transform.position + (transform.forward.normalized * currentSpeed * Time.fixedDeltaTime));
     }
     /*////////////////////////////////////////////////////////////////////////////////////////////////*/
     /// <summary>
@@ -107,14 +130,14 @@ public class TestController : MonoBehaviour
     /*///////////////////////////////////////////////////////////////////////////////////////////////*/
     void CalculateCurrentSpeed()
     {
-        if(input.y == 1 )
+        if(input.y != 0 || input.x != 0)
         {
             print("accelerating");
             decelerationTimer = 0;
             accelerationTimer += Time.deltaTime;
             currentSpeed = maxSpeed * accelerationCurve.Evaluate(accelerationTimer/timeToMaxSpeed);
         }
-        else if(Mathf.Abs(input.y) < 1)
+        else if(input.y == 0 && input.x == 0)
         {
             print("decelerating");
             accelerationTimer = 0;
@@ -132,6 +155,7 @@ public class TestController : MonoBehaviour
             print("zero speed");
             currentSpeed = 0;
         }
+        print("current speed = " + currentSpeed);
     }
     /*////////////////////////////////////////////////////////////////////////////////////////////////*/
     /// <summary>
@@ -141,7 +165,6 @@ public class TestController : MonoBehaviour
     void Update()
     {
         UpdateInput();
-        CalculateCurrentSpeed();
     }
     /*////////////////////////////////////////////////////////////////////////////////////////////////*/
     /// <summary>
@@ -150,9 +173,7 @@ public class TestController : MonoBehaviour
     /*///////////////////////////////////////////////////////////////////////////////////////////////*/
     void FixedUpdate()
     {
-        //no input? exit the update loop
-        if(Mathf.Abs(input.x) < 1 && Mathf.Abs(input.y) < 1) return;
-        CalculateDirection();
+        CalculateCurrentSpeed();
         Rotate();
         Move();
     }

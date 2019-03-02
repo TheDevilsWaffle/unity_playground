@@ -43,10 +43,10 @@ public class CameraController : MonoBehaviour
     }
     /*////////////////////////////////////////////////////////////////////////////////////////////////*/
     /// <summary>
-    /// called every frame, if the MonoBehaviour is enabled.
+    /// called every frame after all other update functions have been called.
     /// </summary>
     /*///////////////////////////////////////////////////////////////////////////////////////////////*/
-    void Update()
+    void FixedUpdate()
     {
         MoveWithTarget();
         LookAtTarget();
