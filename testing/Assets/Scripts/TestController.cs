@@ -132,14 +132,14 @@ public class TestController : MonoBehaviour
     {
         if(input.y != 0 || input.x != 0)
         {
-            print("accelerating");
+            //print("accelerating");
             decelerationTimer = 0;
             accelerationTimer += Time.deltaTime;
             currentSpeed = maxSpeed * accelerationCurve.Evaluate(accelerationTimer/timeToMaxSpeed);
         }
         else if(input.y == 0 && input.x == 0)
         {
-            print("decelerating");
+            //print("decelerating");
             accelerationTimer = 0;
             decelerationTimer += Time.deltaTime;
 
@@ -147,15 +147,15 @@ public class TestController : MonoBehaviour
         }
         if(currentSpeed > maxSpeed)
         {
-            print("max speed achieved");
+            //print("max speed achieved");
             currentSpeed = maxSpeed;
         }
         else if(currentSpeed < 0)
         {
-            print("zero speed");
+            //print("zero speed");
             currentSpeed = 0;
         }
-        print("current speed = " + currentSpeed);
+        //print("current speed = " + currentSpeed);
     }
     /*////////////////////////////////////////////////////////////////////////////////////////////////*/
     /// <summary>
