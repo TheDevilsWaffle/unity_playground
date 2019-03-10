@@ -34,8 +34,17 @@ public class AttachmentPoint : MonoBehaviour
     }
     [SerializeField] Vector3 offset = new Vector3(0, 5f, 0);
     [SerializeField] string[] targetTags;
+    Transform tr;
     #endregion
-
+    #region INITIALIZE
+    /*///////////////////////////////////////////////////////////////////////////////////////////*/
+    /// Awake()
+    /*///////////////////////////////////////////////////////////////////////////////////////////*/
+    void Awake()
+    {
+        tr = this.GetComponent<Transform>();
+    }
+    #endregion
     #region METHODS
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
     /// AttachObject
@@ -44,7 +53,11 @@ public class AttachmentPoint : MonoBehaviour
     {
         Status = AttachmentStatus.OCCUPIED;
         ObjectHeld = _go;
-        ObjectHeld.transform.SetParent(this.transform, true);
+        ObjectHeld.transform.SetParent(tr, true);
+        
+        //not really needed if the scale of the item platform isn't stupid. Keeping for later just in case
+        //ApplyScaleRatio();
+        
         ObjectHeld.transform.localPosition = Vector3.zero + new Vector3(0 ,_go.GetComponent<Renderer>().bounds.size.y, 0) + offset;
         ObjectHeld.transform.localRotation = Quaternion.Euler(0,0,0);
     }
@@ -55,6 +68,18 @@ public class AttachmentPoint : MonoBehaviour
     {
         Status = AttachmentStatus.EMPTY;
         ObjectHeld = null;
+    }
+    /*///////////////////////////////////////////////////////////////////////////////////////////*/
+    /// ApplyScaleRatio
+    /*///////////////////////////////////////////////////////////////////////////////////////////*/
+    void ApplyScaleRatio()
+    {
+        Vector3 _ratio = Vector3.Scale(ObjectHeld.GetComponent<Item>().OriginalLocalScale, tr.localScale);
+        ObjectHeld.transform.localScale = _ratio;
+        print ("original scale = " + ObjectHeld.GetComponent<Item>().OriginalLocalScale);
+        print ("scale of attachment = " + tr.localScale);
+        print ("ratio = " + _ratio);
+        print ("new scale of object = " + ObjectHeld.transform.localScale);
     }
     #endregion
 }

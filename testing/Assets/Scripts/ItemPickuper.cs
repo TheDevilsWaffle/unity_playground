@@ -89,7 +89,7 @@ public class ItemPickuper : SensorObject
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
     /// PickupItem
     /*///////////////////////////////////////////////////////////////////////////////////////////*/    
-    void PickupItem()
+    void PickupItem(bool _worldScalingStays = true)
     {
         if(items.Count >= 1)
         {
@@ -100,7 +100,7 @@ public class ItemPickuper : SensorObject
             // currentItem.transform.localScale = currentItem.GetComponent<Item>().OriginalWorldScale;
             // print("current" + currentItem.transform.localScale);
             // print("stored" + currentItem.GetComponent<Item>().OriginalWorldScale);
-            currentItem.transform.SetParent(pickupTransform, true);
+            currentItem.transform.SetParent(pickupTransform, _worldScalingStays);
             currentItem.transform.localPosition = Vector3.zero;
             currentItem.transform.localRotation = Quaternion.Euler(0,0,0);
 
