@@ -28,4 +28,18 @@ public class EVENT_SENSOR_BROADCAST : GameEvent
 
 #endregion
 
+#region INPUT
+public class EVENT_PLAYER_INPUT_BROADCAST : GameEvent
+{
+    public GameObject player;
+    public KeyCode key;
+    public EVENT_PLAYER_INPUT_BROADCAST(GameObject _player, KeyCode _key)
+    {
+        player = _player;
+        key = _key;
+    }
+}
+    
+#endregion
+
 public class EventsList : MonoBehaviour { }

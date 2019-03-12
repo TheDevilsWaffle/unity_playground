@@ -142,6 +142,67 @@ Transform:
   m_Father: {fileID: 1943472419}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &594876076
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 594876079}
+  - component: {fileID: 594876078}
+  - component: {fileID: 594876077}
+  m_Layer: 0
+  m_Name: Sensor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &594876077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 594876076}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 216d44a51114ace459675bc5979bcb2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targets:
+  - Player
+  sensorObjects:
+  - {fileID: 613024673}
+--- !u!65 &594876078
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 594876076}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.5, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!4 &594876079
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 594876076}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1904811029}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &613024671
 GameObject:
   m_ObjectHideFlags: 0
@@ -189,7 +250,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d02e4339702a1304694bdae324f7649d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensor: {fileID: 1904811031}
+  sensor: {fileID: 594876077}
+  isAutomatic: 0
+  doorControls: {fileID: 651326788}
   status: 1
   offset: {x: 0, y: 0, z: -1}
   openCurve:
@@ -327,9 +390,12 @@ GameObject:
   - component: {fileID: 651326785}
   - component: {fileID: 651326787}
   - component: {fileID: 651326786}
+  - component: {fileID: 651326789}
+  - component: {fileID: 651326790}
+  - component: {fileID: 651326788}
   m_Layer: 0
   m_Name: Door Controls
-  m_TagString: Untagged
+  m_TagString: Interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -342,11 +408,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 651326784}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.496, y: 0.143, z: 0.613}
+  m_LocalPosition: {x: -0.5, y: 0.125, z: 0.65}
   m_LocalScale: {x: 0.1, y: 0.2, z: 0.1}
   m_Children: []
   m_Father: {fileID: 1904811029}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &651326786
 MeshRenderer:
@@ -393,6 +459,49 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 651326784}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &651326788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 651326784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ece267e941de264bb6763176829fe40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  door: {fileID: 613024673}
+  ioStatus: 0
+--- !u!65 &651326789
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 651326784}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2, y: 2, z: 2}
+  m_Center: {x: -1, y: 0, z: 0}
+--- !u!114 &651326790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 651326784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 216d44a51114ace459675bc5979bcb2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targets:
+  - Player
+  sensorObjects:
+  - {fileID: 651326788}
 --- !u!1 &729950201
 GameObject:
   m_ObjectHideFlags: 0
@@ -796,8 +905,9 @@ GameObject:
   - component: {fileID: 1323729035}
   - component: {fileID: 1323729033}
   - component: {fileID: 1323729039}
+  - component: {fileID: 1323729040}
   m_Layer: 9
-  m_Name: Player
+  m_Name: Player_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -971,6 +1081,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interact: 101
   pickupTransform: {fileID: 361705001}
+--- !u!114 &1323729040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1323729032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42f50ee63305bae4aba634a902cbc617, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1412187112
 GameObject:
   m_ObjectHideFlags: 0
@@ -1455,8 +1577,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1904811029}
-  - component: {fileID: 1904811030}
-  - component: {fileID: 1904811031}
   m_Layer: 0
   m_Name: Doorway
   m_TagString: Untagged
@@ -1476,39 +1596,11 @@ Transform:
   m_LocalScale: {x: 1, y: 2, z: 3}
   m_Children:
   - {fileID: 613024672}
+  - {fileID: 594876079}
   - {fileID: 651326785}
   m_Father: {fileID: 1835374961}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1904811030
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1904811028}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1.5, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1904811031
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1904811028}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 216d44a51114ace459675bc5979bcb2d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targets:
-  - Player
-  sensorObjects:
-  - {fileID: 613024673}
 --- !u!1 &1943472418
 GameObject:
   m_ObjectHideFlags: 0
@@ -1570,6 +1662,7 @@ MonoBehaviour:
   targets:
   - Item
   - AttachmentPoint
+  - Interactable
   sensorObjects:
   - {fileID: 1323729039}
 --- !u!1 &2051102493

@@ -3,49 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using DentedPixel;
 
+public enum SensorType
+{
+    AUTOMATIC,
+    MANUAL
+};
+
 public class Sensor : MonoBehaviour
 {
+    [SerializeField] InteractiveStatus status = InteractiveStatus.ENABLED;
     [SerializeField] string[] targets;
     [SerializeField] List<SensorObject> sensorObjects;
-
-    /*////////////////////////////////////////////////////////////////////////////////////////////////*/
-    /// <summary>
-    /// called when the script instance is being loaded.
-    /// </summary>
-    /*///////////////////////////////////////////////////////////////////////////////////////////////*/
-    void Awake()
-    {
-
-    }
-    /*////////////////////////////////////////////////////////////////////////////////////////////////*/
-    /// <summary>
-    /// called before the first frame update
-    /// </summary>
-    /*///////////////////////////////////////////////////////////////////////////////////////////////*/
-    void Start()
-    {
-        SetSubscriptions();
-    }
-    #region SUBSCRIPTIONS
-    ///////////////////////////////////////////////////////////////////////////////////////////////////
-    /// <summary>
-    /// SetSubscriptions()
-    /// </summary>
-    ///////////////////////////////////////////////////////////////////////////////////////////////////
-    void SetSubscriptions()
-    {
-        
-    }
-    ///////////////////////////////////////////////////////////////////////////////////////////////////
-    /// <summary>
-    /// RemoveSubscriptions()
-    /// </summary>
-    ///////////////////////////////////////////////////////////////////////////////////////////////////
-    void RemoveSubscriptions()
-    {
-        
-    }
-    #endregion
     #region TRIGGERS
     /*////////////////////////////////////////////////////////////////////////////////////////////////*/
     /// <summary>
@@ -55,17 +23,20 @@ public class Sensor : MonoBehaviour
     /*///////////////////////////////////////////////////////////////////////////////////////////////*/
     void OnTriggerEnter(Collider _other)
     {
-        for(int _index = 0; _index < targets.Length; ++_index)
+        if(status == InteractiveStatus.ENABLED)
         {
-            if(_other.gameObject.tag == targets[_index])
+            for(int _index = 0; _index < targets.Length; ++_index)
             {
-                SensorData _sensorData = new SensorData(this, SensorStatus.ENTERED, _other.gameObject);
-
-                Events.instance.Raise(new EVENT_SENSOR_BROADCAST(_sensorData));
-
-                for(int _i = 0; _i < sensorObjects.Count; ++_i)
+                if(_other.gameObject.tag == targets[_index])
                 {
-                    sensorObjects[_i].Activate(_sensorData);
+                    //capture data
+                    SensorData _sensorData = new SensorData(this, SensorStatus.ENTERED, _other.gameObject);
+
+                    //automatic
+                    if(sensorType == SensorType.AUTOMATIC)
+                    {
+                        Activate(_sensorData);
+                    }
                 }
             }
         }
@@ -79,17 +50,20 @@ public class Sensor : MonoBehaviour
     /*///////////////////////////////////////////////////////////////////////////////////////////////*/
     void OnTriggerStay(Collider _other)
     {
-        for(int _index = 0; _index < targets.Length; ++_index)
+        if(status == InteractiveStatus.ENABLED)
         {
-            if(_other.gameObject.tag == targets[_index])
+            for(int _index = 0; _index < targets.Length; ++_index)
             {
-                SensorData _sensorData = new SensorData(this, SensorStatus.PERSISTS, _other.gameObject);
-
-                Events.instance.Raise(new EVENT_SENSOR_BROADCAST(_sensorData));
-
-                for(int _i = 0; _i < sensorObjects.Count; ++_i)
+                if(_other.gameObject.tag == targets[_index])
                 {
-                    sensorObjects[_i].Activate(_sensorData);
+                    //capture data
+                    SensorData _sensorData = new SensorData(this, SensorStatus.PERSISTS, _other.gameObject);
+
+                    //automatic
+                    if(sensorType == SensorType.AUTOMATIC)
+                    {
+                        Activate(_sensorData);
+                    }
                 }
             }
         }
@@ -106,25 +80,25 @@ public class Sensor : MonoBehaviour
         {
             if(_other.gameObject.tag == targets[_index])
             {
+                //capture data
                 SensorData _sensorData = new SensorData(this, SensorStatus.EXITED, _other.gameObject);
 
-                Events.instance.Raise(new EVENT_SENSOR_BROADCAST(_sensorData));
-
-                for(int _i = 0; _i < sensorObjects.Count; ++_i)
+                //automatic
+                if(sensorType == SensorType.AUTOMATIC)
                 {
-                    sensorObjects[_i].Activate(_sensorData);
+                    Activate(_sensorData);
                 }
             }
         }
     }
-    #endregion
-    /*////////////////////////////////////////////////////////////////////////////////////////////////*/
-    /// <summary>
-    /// called when the MonoBehaviour will be destroyed.
-    /// </summary>
-    /*///////////////////////////////////////////////////////////////////////////////////////////////*/
-    void OnDestroy()
+
+    void Activate(SensorData _sensorData)
     {
-        RemoveSubscriptions();
+        for(int _i = 0; _i < sensorObjects.Count; ++_i)
+        {
+            sensorObjects[_i].Activate(_sensorData);
+            Events.instance.Raise(new EVENT_SENSOR_BROADCAST(_sensorData));
+        }
     }
+    #endregion
 }

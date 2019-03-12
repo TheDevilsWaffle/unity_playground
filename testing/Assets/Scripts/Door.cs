@@ -12,7 +12,22 @@ public enum DoorStatus
 public class Door : SensorObject
 {
     [SerializeField] Sensor sensor;
+    [SerializeField] bool isAutomatic;
+    public bool IsAutomatic
+    {
+        get { return isAutomatic; }
+        set { isAutomatic = value; }
+    }
+    [SerializeField] DoorControls doorControls;
     [SerializeField] DoorStatus status;
+    public DoorStatus Status
+    {
+        get { return status; }
+        set { 
+                status = value;
+                UpdateDoor(status);
+            }
+    }
     [SerializeField] Vector3 offset;
     [SerializeField] AnimationCurve openCurve;
     [SerializeField] float openTime;
@@ -33,13 +48,16 @@ public class Door : SensorObject
     }
     public override void Activate(SensorData _sensorData)
     {
-        if(_sensorData.status == SensorStatus.ENTERED)
+        if(IsAutomatic)
         {
-            UpdateDoorStatus(DoorStatus.OPEN);
-        }
-        else if(_sensorData.status == SensorStatus.EXITED)
-        {
-            UpdateDoorStatus(DoorStatus.CLOSE);
+            if(_sensorData.status == SensorStatus.ENTERED)
+            {
+                Status = DoorStatus.OPEN;
+            }
+            else if(_sensorData.status == SensorStatus.EXITED)
+            {
+                Status = DoorStatus.CLOSE;
+            }
         }
     }
     /*////////////////////////////////////////////////////////////////////////////////////////////////*/
@@ -47,10 +65,8 @@ public class Door : SensorObject
     /// determine what to do based on door's status
     /// </summary>
     /*///////////////////////////////////////////////////////////////////////////////////////////////*/
-    void UpdateDoorStatus(DoorStatus _status)
+    public void UpdateDoor(DoorStatus _status)
     {
-        status = _status;
-
         if(_status == DoorStatus.CLOSE)
         {
             CloseDoor();
