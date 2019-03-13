@@ -1,62 +1,79 @@
-﻿using System.Collections;
+﻿/*////////////////////////////////////////////////////////////////////////////////////////////////*/
+/// <summary>
+/// Door.cs
+/// </summary>
+/*///////////////////////////////////////////////////////////////////////////////////////////////*/
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public enum DoorStatus
 {
     OPEN,
-    CLOSE,
+    CLOSED,
     DISABLED
 };
 
 public class Door : SensorObject
 {
-    [SerializeField] Sensor sensor;
-    [SerializeField] bool isAutomatic;
-    public bool IsAutomatic
+    #region PROPERTIES
+    [Header("DOOR")]
+    [SerializeField] DoorStatus doorStatus = DoorStatus.CLOSED;
+    public DoorStatus _DoorStatus
     {
-        get { return isAutomatic; }
-        set { isAutomatic = value; }
-    }
-    [SerializeField] DoorControls doorControls;
-    [SerializeField] DoorStatus status;
-    public DoorStatus Status
-    {
-        get { return status; }
+        get { return doorStatus; }
         set { 
-                status = value;
-                UpdateDoor(status);
+                doorStatus = value;
+                UpdateDoor(doorStatus);
             }
     }
-    [SerializeField] Vector3 offset;
+    [SerializeField] Vector3 offsetPosition = new Vector3(0, 0, -1f);
+    Transform tr;
+    
+    [Header("ANIMATION")]
     [SerializeField] AnimationCurve openCurve;
     [SerializeField] float openTime;
     [SerializeField] AnimationCurve closeCurve;
     [SerializeField] float closeTime;
 
-    Transform tr;
-
+    #endregion
+    #region INITIALIZATION
+    /*////////////////////////////////////////////////////////////////////////////////////////////////*/
+    /// <summary>
+    /// OnValidate
+    /// </summary>
+    /*///////////////////////////////////////////////////////////////////////////////////////////////*/
     void OnValidate()
     {
         tr = GetComponent<Transform>();
-
-        //UpdateDoorStatus(status);
     }
+    /*////////////////////////////////////////////////////////////////////////////////////////////////*/
+    /// <summary>
+    /// Awake
+    /// </summary>
+    /*///////////////////////////////////////////////////////////////////////////////////////////////*/
     void Awake()
     {
         OnValidate();
     }
+    #endregion
+    #region METHODS
+    /*////////////////////////////////////////////////////////////////////////////////////////////////*/
+    /// <summary>
+    /// Activate
+    /// </summary>
+    /*///////////////////////////////////////////////////////////////////////////////////////////////*/
     public override void Activate(SensorData _sensorData)
     {
-        if(IsAutomatic)
+        if(_SensorObjectType == SensorObjectType.AUTOMATIC)
         {
             if(_sensorData.status == SensorStatus.ENTERED)
             {
-                Status = DoorStatus.OPEN;
+                _DoorStatus = DoorStatus.OPEN;
             }
             else if(_sensorData.status == SensorStatus.EXITED)
             {
-                Status = DoorStatus.CLOSE;
+                _DoorStatus = DoorStatus.CLOSED;
             }
         }
     }
@@ -67,7 +84,7 @@ public class Door : SensorObject
     /*///////////////////////////////////////////////////////////////////////////////////////////////*/
     public void UpdateDoor(DoorStatus _status)
     {
-        if(_status == DoorStatus.CLOSE)
+        if(_status == DoorStatus.CLOSED)
         {
             CloseDoor();
         }
@@ -102,6 +119,7 @@ public class Door : SensorObject
             LeanTween.cancel(this.gameObject);
         }
         
-        LeanTween.moveLocal(this.gameObject, offset, openTime).setEase(openCurve);
+        LeanTween.moveLocal(this.gameObject, offsetPosition, openTime).setEase(openCurve);
     }
+    #endregion
 }

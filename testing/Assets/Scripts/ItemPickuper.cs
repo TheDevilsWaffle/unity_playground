@@ -9,6 +9,7 @@ using UnityEngine;
 public class ItemPickuper : SensorObject
 {
     #region PROPERTIES
+    [Header("ITEM PICKUPER")]
     [SerializeField] KeyCode interact = KeyCode.E;
     [SerializeField] Transform pickupTransform;
 

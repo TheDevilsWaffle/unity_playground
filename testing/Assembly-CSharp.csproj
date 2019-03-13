@@ -102,6 +102,7 @@
      <Compile Include="Assets\Scripts\KeyboardGamepadLayout.cs" />
      <Compile Include="Assets\Scripts\SensorData.cs" />
      <Compile Include="Assets\Scripts\SensorObject.cs" />
+     <Compile Include="Assets\Scripts\TagSelectorAttribute.cs" />
      <Compile Include="Assets\Scripts\TestController.cs" />
      <Compile Include="Assets\Sensor.cs" />
      <Compile Include="Assets\Tile.cs" />

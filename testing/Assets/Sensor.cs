@@ -1,19 +1,41 @@
-﻿using System.Collections;
+﻿/*////////////////////////////////////////////////////////////////////////////////////////////////*/
+/// <summary>
+/// Sensor.cs
+/// </summary>
+/*///////////////////////////////////////////////////////////////////////////////////////////////*/
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using DentedPixel;
-
-public enum SensorType
-{
-    AUTOMATIC,
-    MANUAL
-};
 
 public class Sensor : MonoBehaviour
 {
-    [SerializeField] InteractiveStatus status = InteractiveStatus.ENABLED;
+    #region PROPERTIES
+    [Header("SENSOR")]
+    [SerializeField] GameObject owner;
+    public GameObject _Owner
+    {
+        get { return owner; }
+        private set { owner = value; }
+    }
+    [SerializeField] InteractiveStatus interactiveStatus = InteractiveStatus.ENABLED;
+    public InteractiveStatus _InteractiveStatus
+    {
+        get { return interactiveStatus; }
+        set { interactiveStatus = value; }
+    }
+    [Space(8)]
+    [Header("TARGETS TO TRACK")]
+    [TagSelector]
     [SerializeField] string[] targets;
+    [Space(8)]
+    [Header("SENSOR OBJECTS TO ALERT")]
     [SerializeField] List<SensorObject> sensorObjects;
+    public List<SensorObject> _SensorObjects
+    {
+        get { return sensorObjects; }
+        private set { sensorObjects = value; }
+    }
+    #endregion
     #region TRIGGERS
     /*////////////////////////////////////////////////////////////////////////////////////////////////*/
     /// <summary>
@@ -23,7 +45,7 @@ public class Sensor : MonoBehaviour
     /*///////////////////////////////////////////////////////////////////////////////////////////////*/
     void OnTriggerEnter(Collider _other)
     {
-        if(status == InteractiveStatus.ENABLED)
+        if(_InteractiveStatus == InteractiveStatus.ENABLED)
         {
             for(int _index = 0; _index < targets.Length; ++_index)
             {
@@ -31,12 +53,7 @@ public class Sensor : MonoBehaviour
                 {
                     //capture data
                     SensorData _sensorData = new SensorData(this, SensorStatus.ENTERED, _other.gameObject);
-
-                    //automatic
-                    if(sensorType == SensorType.AUTOMATIC)
-                    {
-                        Activate(_sensorData);
-                    }
+                    Activate(_sensorData);
                 }
             }
         }
@@ -50,7 +67,7 @@ public class Sensor : MonoBehaviour
     /*///////////////////////////////////////////////////////////////////////////////////////////////*/
     void OnTriggerStay(Collider _other)
     {
-        if(status == InteractiveStatus.ENABLED)
+        if(_InteractiveStatus == InteractiveStatus.ENABLED)
         {
             for(int _index = 0; _index < targets.Length; ++_index)
             {
@@ -58,12 +75,7 @@ public class Sensor : MonoBehaviour
                 {
                     //capture data
                     SensorData _sensorData = new SensorData(this, SensorStatus.PERSISTS, _other.gameObject);
-
-                    //automatic
-                    if(sensorType == SensorType.AUTOMATIC)
-                    {
-                        Activate(_sensorData);
-                    }
+                    Activate(_sensorData);
                 }
             }
         }
@@ -76,22 +88,24 @@ public class Sensor : MonoBehaviour
     /*///////////////////////////////////////////////////////////////////////////////////////////////*/
     void OnTriggerExit(Collider _other)
     {
-        for(int _index = 0; _index < targets.Length; ++_index)
+        if(_InteractiveStatus == InteractiveStatus.ENABLED)
         {
-            if(_other.gameObject.tag == targets[_index])
+            for(int _index = 0; _index < targets.Length; ++_index)
             {
-                //capture data
-                SensorData _sensorData = new SensorData(this, SensorStatus.EXITED, _other.gameObject);
-
-                //automatic
-                if(sensorType == SensorType.AUTOMATIC)
+                if(_other.gameObject.tag == targets[_index])
                 {
+                    //capture data
+                    SensorData _sensorData = new SensorData(this, SensorStatus.EXITED, _other.gameObject);
                     Activate(_sensorData);
                 }
             }
         }
     }
-
+    /*////////////////////////////////////////////////////////////////////////////////////////////////*/
+    /// <summary>
+    /// Activate
+    /// </summary>
+    /*///////////////////////////////////////////////////////////////////////////////////////////////*/
     void Activate(SensorData _sensorData)
     {
         for(int _i = 0; _i < sensorObjects.Count; ++_i)

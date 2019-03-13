@@ -1,4 +1,9 @@
-﻿using System.Collections;
+﻿/*////////////////////////////////////////////////////////////////////////////////////////////////*/
+/// <summary>
+/// DoorControls.cs
+/// </summary>
+/*///////////////////////////////////////////////////////////////////////////////////////////////*/
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,30 +15,37 @@ public enum InteractiveStatus
 
 public class DoorControls : SensorObject
 {
-    [SerializeField] Door door;
-    [SerializeField] InteractiveStatus iStatus = InteractiveStatus.ENABLED;
-    public InteractiveStatus IStatus
+    #region PROPERTIES
+    [SerializeField] InteractiveStatus interactiveStatus = InteractiveStatus.ENABLED;
+    public InteractiveStatus _InteractiveStatus
     {
-        get { return iStatus; }
-        set { iStatus = value; }
+        get { return interactiveStatus; }
+        set { interactiveStatus = value; }
     }
-
-    public override void Activate(SensorData _sensorData)
+    [Header("CONTROLS")]
+    [SerializeField] Door door;
+    
+    #endregion
+    
+    #region METHODS
+    /*////////////////////////////////////////////////////////////////////////////////////////////////*/
+    /// <summary>
+    /// ActivateManually
+    /// </summary>
+    /*///////////////////////////////////////////////////////////////////////////////////////////////*/
+    public override void ActivateManually(GameObject _activator)
     {
-        print("here");
-        if(IStatus == InteractiveObjectStatus.ENABLED)
+        if(_InteractiveStatus == InteractiveStatus.ENABLED)
         {
-            if(!door.IsAutomatic)
+            if(door._DoorStatus == DoorStatus.CLOSED)
             {
-                if(door.Status == DoorStatus.CLOSE)
-                {
-                    door.UpdateDoor(DoorStatus.OPEN);
-                }
-                else if(door.Status == DoorStatus.OPEN)
-                {
-                    door.UpdateDoor(DoorStatus.CLOSE);
-                }
+                door.UpdateDoor(DoorStatus.OPEN);
+            }
+            else if(door._DoorStatus == DoorStatus.OPEN)
+            {
+                door.UpdateDoor(DoorStatus.CLOSED);
             }
         }
-    }
+    }   
+    #endregion
 }

@@ -172,6 +172,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 216d44a51114ace459675bc5979bcb2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  owner: {fileID: 0}
+  interactiveStatus: 0
   targets:
   - Player
   sensorObjects:
@@ -251,10 +253,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sensor: {fileID: 594876077}
-  isAutomatic: 0
-  doorControls: {fileID: 651326788}
-  status: 1
-  offset: {x: 0, y: 0, z: -1}
+  sensorObjectType: 1
+  doorStatus: 1
+  offsetPosition: {x: 0, y: 0, z: -1}
   openCurve:
     serializedVersion: 2
     m_Curve:
@@ -471,8 +472,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ece267e941de264bb6763176829fe40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sensor: {fileID: 651326790}
+  sensorObjectType: 1
+  interactiveStatus: 0
   door: {fileID: 613024673}
-  ioStatus: 0
 --- !u!65 &651326789
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -498,6 +501,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 216d44a51114ace459675bc5979bcb2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  owner: {fileID: 0}
+  interactiveStatus: 0
   targets:
   - Player
   sensorObjects:
@@ -1079,6 +1084,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 033a8dd0a90a34141988a8f866c452ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sensor: {fileID: 1943472421}
+  sensorObjectType: 0
   interact: 101
   pickupTransform: {fileID: 361705001}
 --- !u!114 &1323729040
@@ -1093,6 +1100,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42f50ee63305bae4aba634a902cbc617, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sensor: {fileID: 1943472421}
+  sensorObjectType: 0
+  interactKey: 101
 --- !u!1 &1412187112
 GameObject:
   m_ObjectHideFlags: 0
@@ -1613,7 +1623,7 @@ GameObject:
   - component: {fileID: 1943472420}
   - component: {fileID: 1943472421}
   m_Layer: 0
-  m_Name: Trigger
+  m_Name: Sensor
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1659,6 +1669,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 216d44a51114ace459675bc5979bcb2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  owner: {fileID: 0}
+  interactiveStatus: 0
   targets:
   - Item
   - AttachmentPoint
