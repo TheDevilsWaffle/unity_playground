@@ -42,4 +42,17 @@ public class EVENT_PLAYER_INPUT_BROADCAST : GameEvent
     
 #endregion
 
+#region UI—INVENTORY
+public class EVENT_UI_INVENTORY_UPDATE : GameEvent
+{
+    public GameObject player;
+    public GameObject item;
+    public EVENT_UI_INVENTORY_UPDATE(GameObject _player, GameObject _item)
+    {
+        player = _player;
+        item = _item;
+    }
+}
+#endregion
+
 public class EventsList : MonoBehaviour { }
