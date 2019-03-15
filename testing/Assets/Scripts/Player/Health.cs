@@ -21,7 +21,12 @@ public class Health : MonoBehaviour
     {
         get { return currentHealth; }
         set { UpdateCurrentHealth(value); }
-    }    
+    }
+    [Range(0, 1f)]
+    float currentHealthPercentage = 0;
+    [SerializeField] GameObject healthBarPrefab;
+    GameObject healthBar = null;
+    [SerializeField] RectTransform uiCanvasRectTransform;    
     #endregion
     #region INITIALIZATION
     /*////////////////////////////////////////////////////////////////////////////////////////////////*/
@@ -44,6 +49,14 @@ public class Health : MonoBehaviour
         OnValidate();
         SetSubscriptions();
     }
+    /// <summary>
+    /// Start is called on the frame when a script is enabled just before
+    /// any of the Update methods is called the first time.
+    /// </summary>
+    void Start()
+    {
+        GenerateHealthBar();
+    }
     /*////////////////////////////////////////////////////////////////////////////////////////////////*/
     /// <summary>
     /// description
@@ -51,7 +64,7 @@ public class Health : MonoBehaviour
     /*///////////////////////////////////////////////////////////////////////////////////////////////*/
     void SetSubscriptions()
     {
-        Events.instance.AddListener<EVENT_TARGET_UPDATE_HEALTH>(UpdateHealth);
+        Events.instance.AddListener<EVENT_TARGET_UPDATE_HEALTH>(UpdateHealthEvent);
     }
     /*////////////////////////////////////////////////////////////////////////////////////////////////*/
     /// <summary>
@@ -60,16 +73,27 @@ public class Health : MonoBehaviour
     /*///////////////////////////////////////////////////////////////////////////////////////////////*/
     void RemoveSubscriptions()
     {
-        Events.instance.RemoveListener<EVENT_TARGET_UPDATE_HEALTH>(UpdateHealth);
+        Events.instance.RemoveListener<EVENT_TARGET_UPDATE_HEALTH>(UpdateHealthEvent);
     }    
     #endregion
     #region METHODS
     /*////////////////////////////////////////////////////////////////////////////////////////////////*/
     /// <summary>
+    /// GenerateHealthBar
+    /// </summary>
+    /*///////////////////////////////////////////////////////////////////////////////////////////////*/
+    void GenerateHealthBar()
+    {
+        healthBar = GameObject.Instantiate(healthBarPrefab) as GameObject;
+        healthBar.GetComponent<HealthBar>().SetHealthBar(this.gameObject.transform, uiCanvasRectTransform, currentHealthPercentage);
+        healthBar.transform.SetParent(uiCanvasRectTransform, false);
+    }
+    /*////////////////////////////////////////////////////////////////////////////////////////////////*/
+    /// <summary>
     /// description
     /// </summary>
     /*///////////////////////////////////////////////////////////////////////////////////////////////*/
-    void UpdateHealth(EVENT_TARGET_UPDATE_HEALTH _event)
+    void UpdateHealthEvent(EVENT_TARGET_UPDATE_HEALTH _event)
     {
         if(_event.target = this.gameObject)
         {
@@ -94,6 +118,11 @@ public class Health : MonoBehaviour
             currentHealth = 0;
             DestroyOwner();
         }
+        currentHealthPercentage = currentHealth / maxHealth;
+        if(healthBar != null)
+        {
+            healthBar.GetComponent<HealthBar>().UpdateHealthBarValue(currentHealthPercentage);
+        }
         //Debug.Log("updating health by "+ _value +" to "+ currentHealth);
     }
     /*////////////////////////////////////////////////////////////////////////////////////////////////*/
@@ -105,6 +134,23 @@ public class Health : MonoBehaviour
     {
         print("bleh, i have died!");
     }    
+    #endregion
+    #region TESTING
+    /// <summary>
+    /// Update is called every frame, if the MonoBehaviour is enabled.
+    /// </summary>
+    void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.KeypadPlus))
+        {
+            UpdateCurrentHealth(1f);
+        }
+        if(Input.GetKeyDown(KeyCode.KeypadMinus))
+        {
+            UpdateCurrentHealth(-2.5f);
+        }
+    }
+        
     #endregion
     #region ONDESTROY
     /*////////////////////////////////////////////////////////////////////////////////////////////////*/
