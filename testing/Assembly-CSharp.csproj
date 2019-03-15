@@ -98,6 +98,7 @@
      <Compile Include="Assets\Scripts\Input\KeyboardGamepadLayout.cs" />
      <Compile Include="Assets\Scripts\Items\AttachmentPoint.cs" />
      <Compile Include="Assets\Scripts\Items\Item.cs" />
+     <Compile Include="Assets\Scripts\Player\Health.cs" />
      <Compile Include="Assets\Scripts\Player\Interact.cs" />
      <Compile Include="Assets\Scripts\Player\ItemPickuper.cs" />
      <Compile Include="Assets\Scripts\Player\Movement.cs" />

@@ -39,6 +39,22 @@ public class EVENT_PLAYER_INPUT_BROADCAST : GameEvent
         key = _key;
     }
 }
+
+#region HEALTH
+public class EVENT_TARGET_UPDATE_HEALTH : GameEvent
+{
+    public GameObject target;
+    public GameObject source;
+    public float value;
+    public EVENT_TARGET_UPDATE_HEALTH(GameObject _target, GameObject _source, float _value)
+    {
+        source = _source;
+        target = _target;
+        value = _value;
+    }
+}
+    
+#endregion
     
 #endregion
 

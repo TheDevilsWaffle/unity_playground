@@ -17,7 +17,7 @@ public class UI_Inventory : MonoBehaviour
     {
         currentInventoryText.text = "empty";
     }
-    void OnAwake()
+    void Awake()
     {
         OnValidate();
         SetSubscriptions();
@@ -47,7 +47,12 @@ public class UI_Inventory : MonoBehaviour
     {
         if(_event.player == player)
         {
-            currentInventoryText.text = _event.item.name;
+            if(_event.item != null)
+                currentInventoryText.text = _event.item.name;
+            else
+            {
+                currentInventoryText.text = "empty";
+            }
         }
     }
     #endregion
