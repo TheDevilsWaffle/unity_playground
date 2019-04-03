@@ -74,9 +74,9 @@ public class AttachmentPoint : MonoBehaviour
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
     void ApplyScaleRatio()
     {
-        Vector3 _ratio = Vector3.Scale(ObjectHeld.GetComponent<Item>().OriginalLocalScale, tr.localScale);
+        Vector3 _ratio = Vector3.Scale(ObjectHeld.GetComponent<Item>()._OriginalLocalScale, tr.localScale);
         ObjectHeld.transform.localScale = _ratio;
-        print ("original scale = " + ObjectHeld.GetComponent<Item>().OriginalLocalScale);
+        print ("original scale = " + ObjectHeld.GetComponent<Item>()._OriginalLocalScale);
         print ("scale of attachment = " + tr.localScale);
         print ("ratio = " + _ratio);
         print ("new scale of object = " + ObjectHeld.transform.localScale);

@@ -14,21 +14,21 @@ public class Item : MonoBehaviour
 {
     #region PROPERTIES
     [SerializeField] ItemStatus status = ItemStatus.PICKUPABLE;
-    public ItemStatus Status
+    public ItemStatus _Status
     {
         get { return status; }
         set { status = value; }
     }
 
     Vector3 originalWorldScale;
-    public Vector3 OriginalWorldScale
+    public Vector3 _OriginalWorldScale
     {
         get { return originalWorldScale; }
         private set { originalWorldScale = value; }
     }
 
     Vector3 originalLocalScale;
-    public Vector3 OriginalLocalScale
+    public Vector3 _OriginalLocalScale
     {
         get { return originalLocalScale; }
         private set { originalLocalScale = value; }
@@ -38,22 +38,13 @@ public class Item : MonoBehaviour
     #region INITIALIZE
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
     /// <summary>
-    /// called when the script instance is being loaded.
-    /// </summary>
-    /*///////////////////////////////////////////////////////////////////////////////////////////*/
-    public Item(ItemStatus _status)
-    {
-        status = _status;
-    }
-    /*///////////////////////////////////////////////////////////////////////////////////////////*/
-    /// <summary>
     /// called upon initialization and can be used to set values of members of this object
     /// </summary>
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
-    void Awake()
+    public virtual void Awake()
     {
-        OriginalWorldScale = this.gameObject.transform.lossyScale;
-        OriginalLocalScale = this.gameObject.transform.localScale;
+        originalWorldScale = this.gameObject.transform.lossyScale;
+        originalLocalScale = this.gameObject.transform.localScale;
     }
     #endregion
 }
