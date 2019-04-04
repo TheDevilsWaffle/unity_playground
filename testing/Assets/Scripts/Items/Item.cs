@@ -13,6 +13,12 @@ public enum ItemStatus
 public class Item : MonoBehaviour
 {
     #region PROPERTIES
+    GameObject owner;
+    public GameObject _Owner
+    {
+        get { return owner; }
+        set { owner = value; }
+    }
     [SerializeField] ItemStatus status = ItemStatus.PICKUPABLE;
     public ItemStatus _Status
     {

@@ -110,6 +110,7 @@ public class ItemPickuper : SensorObject
             currentItem = items[0];
             items.Remove(items[0]);
             currentItem.GetComponent<Item>()._Status = ItemStatus.CARRIED;
+            currentItem.GetComponent<Item>()._Owner = this.gameObject;
             TogglePhysics(currentItem, true);
             // currentItem.transform.localScale = currentItem.GetComponent<Item>().OriginalWorldScale;
             // print("current" + currentItem.transform.localScale);
@@ -129,6 +130,7 @@ public class ItemPickuper : SensorObject
         if (currentItem != null)
         {
             currentItem.GetComponent<Item>()._Status = ItemStatus.PICKUPABLE;
+            currentItem.GetComponent<Item>()._Owner = null;
             TogglePhysics(currentItem, false);
             currentItem.transform.SetParent(environment, true);
             currentItem.transform.localScale = currentItem.GetComponent<Item>()._OriginalWorldScale;

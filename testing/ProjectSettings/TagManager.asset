@@ -8,6 +8,7 @@ TagManager:
   - AttachmentPoint
   - Interactable
   - UI
+  - Wall
   layers:
   - Default
   - TransparentFX
