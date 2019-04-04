@@ -11,14 +11,15 @@ public class ItemPickuper : SensorObject
     #region PROPERTIES
     [Header("ITEM PICKUPER")]
     [SerializeField] KeyCode interact = KeyCode.E;
+    [SerializeField] KeyCode useItem = KeyCode.Return;
     [SerializeField] Transform pickupTransform;
 
     Transform environment;
     List<GameObject> items;
     GameObject currentItem;
-    AttachmentPoint attachmentPoint;   
+    AttachmentPoint attachmentPoint;
     #endregion
-    
+
     #region INITIALIZATION
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
     /// <summary>
@@ -28,10 +29,10 @@ public class ItemPickuper : SensorObject
     void Awake()
     {
         items = new List<GameObject>();
-        environment = GameObject.Find("Environment").gameObject.transform;    
-    }    
+        environment = GameObject.Find("Environment").gameObject.transform;
+    }
     #endregion
-    
+
     #region UPDATE
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
     /// <summary>
@@ -40,38 +41,50 @@ public class ItemPickuper : SensorObject
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
     void Update()
     {
-        if(Input.GetKeyDown(interact))
+        if (Input.GetKeyDown(interact))
         {
-            if(AttemptPickupItem()) return;
+            if (AttemptPickupItem()) return;
             else AttemptDropItem();
         }
-    }    
+        if (Input.GetKeyDown(useItem))
+        {
+            AttemptUseItem();
+        }
+
+    }
     #endregion
-    
+
     #region METHODS
+    void AttemptUseItem()
+    {
+        if (currentItem != null)
+        {
+            currentItem.GetComponent<Item>().UseItem();
+        }
+    }
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
     /// Activate
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
     public override void Activate(SensorData _sensorData)
     {
-        if(_sensorData.detectee.tag == "Item")
+        if (_sensorData.detectee.tag == "Item")
         {
-            if(_sensorData.status == SensorStatus.ENTERED || _sensorData.status == SensorStatus.PERSISTS && !IsItemInList(_sensorData.detectee))
+            if (_sensorData.status == SensorStatus.ENTERED || _sensorData.status == SensorStatus.PERSISTS && !IsItemInList(_sensorData.detectee))
             {
                 items.Add(_sensorData.detectee);
             }
-            else if(_sensorData.status == SensorStatus.EXITED && IsItemInList(_sensorData.detectee))
+            else if (_sensorData.status == SensorStatus.EXITED && IsItemInList(_sensorData.detectee))
             {
                 items.Remove(_sensorData.detectee);
             }
         }
-        if(_sensorData.detectee.tag == "AttachmentPoint")
+        if (_sensorData.detectee.tag == "AttachmentPoint")
         {
-            if(_sensorData.status == SensorStatus.ENTERED)
+            if (_sensorData.status == SensorStatus.ENTERED)
             {
                 attachmentPoint = _sensorData.detectee.GetComponent<AttachmentPoint>();
             }
-            else if(_sensorData.status == SensorStatus.EXITED)
+            else if (_sensorData.status == SensorStatus.EXITED)
             {
                 attachmentPoint = null;
             }
@@ -82,17 +95,17 @@ public class ItemPickuper : SensorObject
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
     bool IsItemInList(GameObject _go)
     {
-        if(items.Contains(_go))
+        if (items.Contains(_go))
             return true;
         else
             return false;
     }
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
     /// PickupItem
-    /*///////////////////////////////////////////////////////////////////////////////////////////*/    
+    /*///////////////////////////////////////////////////////////////////////////////////////////*/
     void PickupItem(bool _worldScalingStays = true)
     {
-        if(items.Count >= 1)
+        if (items.Count >= 1)
         {
             currentItem = items[0];
             items.Remove(items[0]);
@@ -103,7 +116,7 @@ public class ItemPickuper : SensorObject
             // print("stored" + currentItem.GetComponent<Item>().OriginalWorldScale);
             currentItem.transform.SetParent(pickupTransform, _worldScalingStays);
             currentItem.transform.localPosition = Vector3.zero;
-            currentItem.transform.localRotation = Quaternion.Euler(0,0,0);
+            currentItem.transform.localRotation = Quaternion.Euler(0, 0, 0);
 
             UpdatePlayerInventoryUI(currentItem);
         }
@@ -113,7 +126,7 @@ public class ItemPickuper : SensorObject
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
     void DropItem()
     {
-        if(currentItem != null)
+        if (currentItem != null)
         {
             currentItem.GetComponent<Item>()._Status = ItemStatus.PICKUPABLE;
             TogglePhysics(currentItem, false);
@@ -142,21 +155,21 @@ public class ItemPickuper : SensorObject
     void TogglePhysics(GameObject _go, bool _active)
     {
         //run through the guantlet of rigidbody & collider types
-        if(_go.GetComponent<Rigidbody>())
+        if (_go.GetComponent<Rigidbody>())
         {
             _go.GetComponent<Rigidbody>().isKinematic = _active;
         }
-        if(_go.GetComponent<BoxCollider>())
+        if (_go.GetComponent<BoxCollider>())
         {
             _go.GetComponent<BoxCollider>().isTrigger = _active;
             return;
         }
-        else if(_go.GetComponent<SphereCollider>())
+        else if (_go.GetComponent<SphereCollider>())
         {
             _go.GetComponent<SphereCollider>().isTrigger = _active;
-            return; 
-        }      
-        else if(_go.GetComponent<CapsuleCollider>())
+            return;
+        }
+        else if (_go.GetComponent<CapsuleCollider>())
         {
             _go.GetComponent<CapsuleCollider>().isTrigger = _active;
             return;
@@ -167,13 +180,13 @@ public class ItemPickuper : SensorObject
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
     bool AttemptPickupItem()
     {
-        if(currentItem == null && attachmentPoint != null && attachmentPoint.Status == AttachmentStatus.OCCUPIED)
+        if (currentItem == null && attachmentPoint != null && attachmentPoint.Status == AttachmentStatus.OCCUPIED)
         {
             attachmentPoint.DetachObject();
             PickupItem();
             return true;
         }
-        else if(currentItem == null)
+        else if (currentItem == null)
         {
             PickupItem();
             return true;
@@ -185,9 +198,9 @@ public class ItemPickuper : SensorObject
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
     void AttemptDropItem()
     {
-        if(currentItem != null && attachmentPoint != null)
+        if (currentItem != null && attachmentPoint != null)
         {
-            if(attachmentPoint.Status == AttachmentStatus.EMPTY)
+            if (attachmentPoint.Status == AttachmentStatus.EMPTY)
             {
                 PlaceItemOnAttachmentPoint();
             }

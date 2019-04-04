@@ -99,7 +99,9 @@
      <Compile Include="Assets\Scripts\Input\InputData.cs" />
      <Compile Include="Assets\Scripts\Input\KeyboardGamepadLayout.cs" />
      <Compile Include="Assets\Scripts\Items\AttachmentPoint.cs" />
+     <Compile Include="Assets\Scripts\Items\GrappleHook.cs" />
      <Compile Include="Assets\Scripts\Items\Item.cs" />
+     <Compile Include="Assets\Scripts\Items\KineticGun.cs" />
      <Compile Include="Assets\Scripts\PhysicsAttractor.cs" />
      <Compile Include="Assets\Scripts\Player\Health.cs" />
      <Compile Include="Assets\Scripts\Player\Interact.cs" />

@@ -36,62 +36,23 @@ public class Gun : Item
         get { return speed; }
         set { speed = value; }
     }
-    [SerializeField] GameObject projectilePrefab;
     [SerializeField] Transform firingPoint;
+    public Transform _FiringPoint
+    {
+        get { return firingPoint; }
+        set { firingPoint = value; }
+    }
     [SerializeField] Vector3 firingOffset = new Vector3(0, 0, 0);
-    
-    float timer;
+    public Vector3 _FiringOffset
+    {
+        get { return firingOffset; }
+        set { firingOffset = value; }
+    }
+    protected float timer;
 
-    public void Shoot()
+    public override void UseItem()
     {
-        if(CanFire())
-        {
-            ApplyVelocity(CreateProjectile());
-            
-            //reset shotdelay timer
-            timer = 0;
-        }
-        
+        Shoot();
     }
-    GameObject CreateProjectile()
-    {
-        GameObject projectile = GameObject.Instantiate(projectilePrefab,
-                                                       (firingPoint.position + firingOffset),
-                                                       Quaternion.identity);
-        return projectile;
-    }
-    void ApplyVelocity(GameObject _projectile)
-    {
-        _projectile.GetComponent<Rigidbody>().AddForce(firingPoint.forward.normalized * speed, ForceMode.Impulse);
-    }
-    bool CanFire()
-    {
-        if(timer >= shootDelay)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-    /// <summary>
-    /// Update is called every frame, if the MonoBehaviour is enabled.
-    /// </summary>
-    void Update()
-    {
-        Testing();
-        
-        if(timer < shootDelay)
-        {
-            timer += Time.deltaTime;
-        }
-    }
-    void Testing()
-    {
-        if(Input.GetKeyDown(KeyCode.KeypadPlus))
-        {
-            Shoot();
-        }
-    }
+    public virtual void Shoot() { }
 }

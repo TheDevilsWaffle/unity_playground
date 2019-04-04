@@ -8,7 +8,7 @@ public enum ItemStatus
 {
     PICKUPABLE,
     CARRIED
-};    
+};
 
 public class Item : MonoBehaviour
 {
@@ -46,5 +46,6 @@ public class Item : MonoBehaviour
         originalWorldScale = this.gameObject.transform.lossyScale;
         originalLocalScale = this.gameObject.transform.localScale;
     }
+    public virtual void UseItem() { }
     #endregion
 }
