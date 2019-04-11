@@ -41,7 +41,6 @@ public class Dialog : Interactable
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
     void ResetDialog()
     {
-        position = Camera.main.WorldToScreenPoint(transform.position) + offsetPosition;
         dialogCount = dialogs.Count;
         currentDialog = 0;
         isDialogActive = false;
@@ -50,7 +49,7 @@ public class Dialog : Interactable
     #region OVERRIDE METHODS
     public override void Activate()
     {
-        dialogSystem.DisplayDialog(this.gameObject.name, dialogs[0], position);
+        dialogSystem.DisplayDialog(this.gameObject, dialogs[0]);
     }
 
     /// <summary>

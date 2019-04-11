@@ -6,21 +6,37 @@ public class DialogSystem : MonoBehaviour
 {
     #region PROPERTIES
     [SerializeField] GameObject dialogContainer;
-    #endregion
-    public void DisplayDialog(string _name, string _dialog, Vector3 _position)
-    {
-        //turn on dialog if it needs to be turned on
-        ActivateDialog(_position);
-    }
+    List<GameObject> activeDialogs = new List<GameObject>();
 
-    void ActivateDialog(Vector3 _position)
+    #endregion
+    public void DisplayDialog(GameObject _go, string _dialog)
+    {
+        activeDialogs.Add(_go);
+
+        //turn on dialog if it needs to be turned on
+        ActivateDialog();
+    }
+    void Update()
+    {
+        if(activeDialogs.Count > 0)
+        {
+            UpdateDialogPositions();
+        }
+    }
+    void UpdateDialogPositions()
+    {
+        foreach (var _dialogs in activeDialogs)
+        {
+            dialogContainer.GetComponent<RectTransform>().position = Camera.main.WorldToScreenPoint(_dialogs.transform.position);
+        }
+    }
+    void ActivateDialog()
     {
         if (dialogContainer.activeSelf)
             return;
         else
         {
             dialogContainer.SetActive(true);
-            dialogContainer.GetComponent<RectTransform>().position = _position;
         }
     }
 }
