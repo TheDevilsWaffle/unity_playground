@@ -5,6 +5,7 @@ using UnityEngine;
 public class Dialog : Interactable
 {
     #region PROPERTIES
+    [SerializeField] bool isAutomatic = true;
     [SerializeField] DialogSystem dialogSystem;
     [TextArea(3, 5)]
     [SerializeField] List<string> dialogs = new List<string>();
@@ -47,20 +48,9 @@ public class Dialog : Interactable
     }
     #endregion
     #region OVERRIDE METHODS
-    public override void Activate()
+    public override void Activate(SensorData _sensorData)
     {
-        dialogSystem.DisplayDialog(this.gameObject, dialogs[0]);
-    }
-
-    /// <summary>
-    /// Update is called every frame, if the MonoBehaviour is enabled.
-    /// </summary>
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.KeypadEnter))
-        {
-            Activate();
-        }
+        dialogSystem.DisplayDialog(_sensorData.detectee, dialogs);
     }
     #endregion
 }

@@ -7,32 +7,47 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum SensorObjectType
-{
-    AUTOMATIC,
-    MANUAL
-};
 
 public class SensorObject : MonoBehaviour
 {
     #region PROPERTIES
-    [Header("SENSOR")]
-    [SerializeField] Sensor sensor;
-    public Sensor _Sensor
-    {
-        get { return sensor; }
-        set { sensor = value; }
-    }
-    [SerializeField] SensorObjectType sensorObjectType = SensorObjectType.AUTOMATIC;
-    public SensorObjectType _SensorObjectType
-    {
-        get { return sensorObjectType; }
-        set { sensorObjectType = value; }
-    }
+    [SerializeField] ActivationType activationType = ActivationType.MANUAL;
+    [Header("IF MANUAL")]
+    [SerializeField] KeyCode activateKey = KeyCode.E;
+    Interactable currentManualInteractable;
     #endregion
-    
-    #region METHODS
+    /// <summary>
+    /// Update is called every frame, if the MonoBehaviour is enabled.
+    /// </summary>
+    void Update()
+    {
+        if (activationType == ActivationType.MANUAL && Input.GetKeyDown(activateKey))
+            AttemptManualActivate();
+    }
+    void AttemptManualActivate()
+    {
+        if (currentManualInteractable != null)
+            currentManualInteractable.Activate(this.gameObject);
+    }
+    #region VIRTUAL METHODS
     public virtual void Activate(SensorData _sensorData) { }
-    public virtual void ActivateManually(GameObject _activator) { }
+    public virtual void ManuallyActivateEnter(SensorData _sensorData) { }
+    public virtual void ManuallyActivatePersists(SensorData _sensorData) { }
+    public virtual void ManuallyActivateExit(SensorData _sensorData) { }
+    public virtual void AutomaticActivateEnter(SensorData _sensorData) { }
+    public virtual void AutomaticActivatePersists(SensorData _sensorData) { }
+    public virtual void AutomaticActivateExit(SensorData _sensorData) { }
+    #endregion
+
+    #region METHODS
+    /*////////////////////////////////////////////////////////////////////////////////////////////////*/
+    /// <summary>
+    /// SensorAlert()
+    /// </summary>
+    /*///////////////////////////////////////////////////////////////////////////////////////////////*/
+    public void SensorAlert(SensorData _sd)
+    {
+        
+    }
     #endregion
 }

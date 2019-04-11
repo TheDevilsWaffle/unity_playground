@@ -25,7 +25,6 @@ public class EVENT_SENSOR_BROADCAST : GameEvent
     }
 }
 
-
 #endregion
 
 #region INPUT
@@ -53,9 +52,9 @@ public class EVENT_TARGET_UPDATE_HEALTH : GameEvent
         value = _value;
     }
 }
-    
+
 #endregion
-    
+
 #endregion
 
 #region UI—INVENTORY

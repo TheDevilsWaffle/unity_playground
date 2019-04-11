@@ -6,36 +6,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class Sensor : MonoBehaviour
 {
     #region PROPERTIES
-    [Header("SENSOR")]
-    [SerializeField] GameObject owner;
-    public GameObject _Owner
+    [Header("OWNER")]
+    [SerializeField] SensorObject owner;
+    public SensorObject _Owner
     {
         get { return owner; }
         private set { owner = value; }
     }
-    [SerializeField] InteractiveStatus interactiveStatus = InteractiveStatus.ENABLED;
-    public InteractiveStatus _InteractiveStatus
-    {
-        get { return interactiveStatus; }
-        set { interactiveStatus = value; }
-    }
-    [Space(8)]
     [Header("TARGETS TO TRACK")]
     [TagSelector]
     [SerializeField] string[] targets;
-    [Space(8)]
-    [Header("SENSOR OBJECTS TO ALERT")]
-    [SerializeField] List<SensorObject> sensorObjects;
-    public List<SensorObject> _SensorObjects
-    {
-        get { return sensorObjects; }
-        private set { sensorObjects = value; }
-    }
     #endregion
+    bool IsTarget(string _tag)
+    {
+        for (int _index = 0; _index < targets.Length; ++_index)
+        {
+            if (_tag == targets[_index])
+                return true;
+        }
+        return false;
+    }
     #region TRIGGERS
     /*////////////////////////////////////////////////////////////////////////////////////////////////*/
     /// <summary>
@@ -45,18 +38,8 @@ public class Sensor : MonoBehaviour
     /*///////////////////////////////////////////////////////////////////////////////////////////////*/
     void OnTriggerEnter(Collider _other)
     {
-        if(_InteractiveStatus == InteractiveStatus.ENABLED)
-        {
-            for(int _index = 0; _index < targets.Length; ++_index)
-            {
-                if(_other.gameObject.tag == targets[_index])
-                {
-                    //capture data
-                    SensorData _sensorData = new SensorData(this, SensorStatus.ENTERED, _other.gameObject);
-                    Activate(_sensorData);
-                }
-            }
-        }
+        if (IsTarget(_other.gameObject.tag))
+            owner.SensorAlert(new SensorData(this.gameObject, _other.gameObject, TriggerStatus.ENTER));
     }
     /*///////////////////////////////////////////////////////////////////////////////////////////////*/
     /// <summary>
@@ -67,18 +50,8 @@ public class Sensor : MonoBehaviour
     /*///////////////////////////////////////////////////////////////////////////////////////////////*/
     void OnTriggerStay(Collider _other)
     {
-        if(_InteractiveStatus == InteractiveStatus.ENABLED)
-        {
-            for(int _index = 0; _index < targets.Length; ++_index)
-            {
-                if(_other.gameObject.tag == targets[_index])
-                {
-                    //capture data
-                    SensorData _sensorData = new SensorData(this, SensorStatus.PERSISTS, _other.gameObject);
-                    Activate(_sensorData);
-                }
-            }
-        }
+        if (IsTarget(_other.gameObject.tag))
+            owner.SensorAlert(new SensorData(this.gameObject, _other.gameObject, TriggerStatus.STAY));
     }
     /*////////////////////////////////////////////////////////////////////////////////////////////////*/
     /// <summary>
@@ -88,33 +61,8 @@ public class Sensor : MonoBehaviour
     /*///////////////////////////////////////////////////////////////////////////////////////////////*/
     void OnTriggerExit(Collider _other)
     {
-        if(_InteractiveStatus == InteractiveStatus.ENABLED)
-        {
-            for(int _index = 0; _index < targets.Length; ++_index)
-            {
-                if(_other.gameObject.tag == targets[_index])
-                {
-                    //capture data
-                    SensorData _sensorData = new SensorData(this, SensorStatus.EXITED, _other.gameObject);
-                    Activate(_sensorData);
-                }
-            }
-        }
+        if (IsTarget(_other.gameObject.tag))
+            owner.SensorAlert(new SensorData(this.gameObject, _other.gameObject, TriggerStatus.EXIT));
     }
-    #endregion
-    #region METHODS
-    /*////////////////////////////////////////////////////////////////////////////////////////////////*/
-    /// <summary>
-    /// Activate
-    /// </summary>
-    /*///////////////////////////////////////////////////////////////////////////////////////////////*/
-    void Activate(SensorData _sensorData)
-    {
-        for(int _i = 0; _i < sensorObjects.Count; ++_i)
-        {
-            sensorObjects[_i].Activate(_sensorData);
-            Events.instance.Raise(new EVENT_SENSOR_BROADCAST(_sensorData));
-        }
-    }    
     #endregion
 }

@@ -1,23 +1,23 @@
 ﻿using UnityEngine;
 
-public enum SensorStatus
+public enum TriggerStatus
 {
-    ENTERED,
-    PERSISTS,
-    EXITED,
+    ENTER,
+    STAY,
+    EXIT,
     DISABLED
 };
 
 public struct SensorData
 {
-    public Sensor sensor;
-    public SensorStatus status;
-    public GameObject detectee;
+    public GameObject _DetectorObject;
+    public GameObject _DetectedObject;
+    public TriggerStatus _TriggerStatus;
 
-    public SensorData(Sensor _sensor, SensorStatus _status, GameObject _detectee)
+    public SensorData(GameObject _detectorObject, GameObject _detectedObject, TriggerStatus _triggerStatus)
     {
-        sensor = _sensor;
-        status = _status;
-        detectee = _detectee;
+        _DetectorObject = _detectorObject;
+        _DetectedObject = _detectedObject;
+        _TriggerStatus = _triggerStatus;
     }
 }
