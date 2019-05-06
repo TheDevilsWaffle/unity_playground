@@ -1,7 +1,6 @@
 ﻿/*////////////////////////////////////////////////////////////////////////////////////////////////*/
-/// <summary>
-/// Interact.cs
-/// </summary>
+/// SCRIPT — Interact.cs
+/// PURPOSE — generic ability to interact w/ something that is interactable
 /*///////////////////////////////////////////////////////////////////////////////////////////////*/
 using System.Collections;
 using System.Collections.Generic;
@@ -15,6 +14,7 @@ public class Interact : SensorObject
     List<GameObject> interactables = new List<GameObject>();
     GameObject currentInteractable = null;
     #endregion
+
     #region INITIALIZATION
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
     /// <summary>
@@ -27,6 +27,7 @@ public class Interact : SensorObject
         interactables = new List<GameObject>();
     }
     #endregion
+
     #region UPDATE
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
     /// <summary>
@@ -36,11 +37,10 @@ public class Interact : SensorObject
     void Update()
     {
         if(Input.GetKeyDown(interactKey))
-        {
             AttemptInteract();
-        }
     }    
     #endregion
+    
     #region METHODS
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
     /// Activate
@@ -50,18 +50,15 @@ public class Interact : SensorObject
         if(_sensorData.detectee.tag == "Interactable")
         {
             if(_sensorData.status == SensorStatus.ENTERED || _sensorData.status == SensorStatus.PERSISTS && !IsItemInList(_sensorData.detectee))
-            {
                 interactables.Add(_sensorData.detectee);
-            }
+
             else if(_sensorData.status == SensorStatus.EXITED && IsItemInList(_sensorData.detectee))
-            {
                 interactables.Remove(_sensorData.detectee);
-            }
         }
     }
     /*////////////////////////////////////////////////////////////////////////////////////////////////*/
     /// <summary>
-    /// AttemptInteract
+    /// attempt to interact w/ the thing
     /// </summary>
     /*///////////////////////////////////////////////////////////////////////////////////////////////*/
     void AttemptInteract()
@@ -70,14 +67,15 @@ public class Interact : SensorObject
         {
             currentInteractable = interactables[0];
             if(currentInteractable.GetComponent<SensorObject>()._SensorObjectType == SensorObjectType.MANUAL)
-            {
                 currentInteractable.GetComponent<SensorObject>().ActivateManually(_Sensor._Owner);
-            }
+
             interactables.Remove(interactables[0]);
         }
     }
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
-    /// IsItemInList
+    /// <summary>
+    /// return whether or not this interactable is in the list of things we can interact with
+    /// </summary>
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
     bool IsItemInList(GameObject _go)
     {

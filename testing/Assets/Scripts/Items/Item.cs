@@ -1,5 +1,7 @@
 ﻿/*///////////////////////////////////////////////////////////////////////////////////////////*/
-/// Item.cs
+/// SCRIPT — Item
+/// PURPOSE — generic item that is the base class for something that is able to be picked up
+///           by either the player or other characters.
 /*///////////////////////////////////////////////////////////////////////////////////////////*/
 
 using UnityEngine;
@@ -49,6 +51,7 @@ public class Item : MonoBehaviour
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
     public virtual void Awake()
     {
+        //capture this in case we need this for weird scale issues when things are not (1,1,1)
         originalWorldScale = this.gameObject.transform.lossyScale;
         originalLocalScale = this.gameObject.transform.localScale;
     }

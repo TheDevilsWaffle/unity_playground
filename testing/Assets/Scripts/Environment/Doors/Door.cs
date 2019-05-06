@@ -1,7 +1,6 @@
 ﻿/*////////////////////////////////////////////////////////////////////////////////////////////////*/
-/// <summary>
-/// Door.cs
-/// </summary>
+/// SCRIPT — Door
+/// PURPOSE — door that is activatable via door controls or automatic sensor
 /*///////////////////////////////////////////////////////////////////////////////////////////////*/
 using System.Collections;
 using System.Collections.Generic;
@@ -35,18 +34,9 @@ public class Door : SensorObject
     [SerializeField] float openTime;
     [SerializeField] AnimationCurve closeCurve;
     [SerializeField] float closeTime;
-
     #endregion
+
     #region INITIALIZATION
-    /*////////////////////////////////////////////////////////////////////////////////////////////////*/
-    /// <summary>
-    /// OnValidate
-    /// </summary>
-    /*///////////////////////////////////////////////////////////////////////////////////////////////*/
-    void OnValidate()
-    {
-        tr = GetComponent<Transform>();
-    }
     /*////////////////////////////////////////////////////////////////////////////////////////////////*/
     /// <summary>
     /// Awake
@@ -54,9 +44,10 @@ public class Door : SensorObject
     /*///////////////////////////////////////////////////////////////////////////////////////////////*/
     void Awake()
     {
-        OnValidate();
+        tr = GetComponent<Transform>();
     }
     #endregion
+    
     #region METHODS
     /*////////////////////////////////////////////////////////////////////////////////////////////////*/
     /// <summary>
@@ -69,14 +60,10 @@ public class Door : SensorObject
         {
             //door is closed, open it
             if(_sensorData.status == SensorStatus.ENTERED)
-            {
                 _DoorStatus = DoorStatus.OPEN;
-            }
             //door is open, close it
             else if(_sensorData.status == SensorStatus.EXITED)
-            {
                 _DoorStatus = DoorStatus.CLOSED;
-            }
         }
     }
     /*////////////////////////////////////////////////////////////////////////////////////////////////*/
@@ -87,39 +74,31 @@ public class Door : SensorObject
     public void UpdateDoor(DoorStatus _status)
     {
         if(_status == DoorStatus.CLOSED)
-        {
             CloseDoor();
-        }
         else if (_status == DoorStatus.OPEN)
-        {
             OpenDoor();
-        }
     }
     /*////////////////////////////////////////////////////////////////////////////////////////////////*/
     /// <summary>
-    /// description
+    /// animate close
     /// </summary>
     /*///////////////////////////////////////////////////////////////////////////////////////////////*/
     void CloseDoor()
     {
         if(LeanTween.isTweening(this.gameObject))
-        {
             LeanTween.cancel(this.gameObject);
-        }
 
         LeanTween.moveLocal(this.gameObject, Vector3.zero, closeTime).setEase(closeCurve);
     }
     /*////////////////////////////////////////////////////////////////////////////////////////////////*/
     /// <summary>
-    /// description
+    /// animate open
     /// </summary>
     /*///////////////////////////////////////////////////////////////////////////////////////////////*/
     void OpenDoor()
     {
         if(LeanTween.isTweening(this.gameObject))
-        {
             LeanTween.cancel(this.gameObject);
-        }
         
         LeanTween.moveLocal(this.gameObject, offsetPosition, openTime).setEase(openCurve);
     }

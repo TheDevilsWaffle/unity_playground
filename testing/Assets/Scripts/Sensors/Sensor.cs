@@ -1,7 +1,6 @@
 ﻿/*////////////////////////////////////////////////////////////////////////////////////////////////*/
-/// <summary>
-/// Sensor.cs
-/// </summary>
+/// SCRIPT — Sensor
+/// PURPOSE — detect targets from list and alert sensor objects so they can perform actions
 /*///////////////////////////////////////////////////////////////////////////////////////////////*/
 using System.Collections;
 using System.Collections.Generic;
@@ -23,11 +22,11 @@ public class Sensor : MonoBehaviour
         get { return interactiveStatus; }
         set { interactiveStatus = value; }
     }
-    [Space(8)]
+
     [Header("TARGETS TO TRACK")]
     [TagSelector]
     [SerializeField] string[] targets;
-    [Space(8)]
+    
     [Header("SENSOR OBJECTS TO ALERT")]
     [SerializeField] List<SensorObject> sensorObjects;
     public List<SensorObject> _SensorObjects
@@ -36,6 +35,7 @@ public class Sensor : MonoBehaviour
         private set { sensorObjects = value; }
     }
     #endregion
+    
     #region TRIGGERS
     /*////////////////////////////////////////////////////////////////////////////////////////////////*/
     /// <summary>

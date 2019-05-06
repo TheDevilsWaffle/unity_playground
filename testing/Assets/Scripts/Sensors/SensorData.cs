@@ -1,11 +1,15 @@
-﻿using UnityEngine;
+﻿/*///////////////////////////////////////////////////////////////////////////////////////////*/
+/// SCRIPT — SensorData
+/// PURPOSE — used to pass information from sensor to sensor object
+/*///////////////////////////////////////////////////////////////////////////////////////////*/
+
+using UnityEngine;
 
 public enum SensorStatus
 {
     ENTERED,
     PERSISTS,
-    EXITED,
-    DISABLED
+    EXITED
 };
 
 public struct SensorData

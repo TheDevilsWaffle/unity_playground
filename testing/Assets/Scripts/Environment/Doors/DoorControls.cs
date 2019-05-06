@@ -1,7 +1,6 @@
 ﻿/*////////////////////////////////////////////////////////////////////////////////////////////////*/
-/// <summary>
-/// DoorControls.cs
-/// </summary>
+/// SCRIPT — DoorControls
+/// PURPOSE — allow for manual open/close of door by characters
 /*///////////////////////////////////////////////////////////////////////////////////////////////*/
 using System.Collections;
 using System.Collections.Generic;
@@ -37,13 +36,9 @@ public class DoorControls : SensorObject
         if(_InteractiveStatus == InteractiveStatus.ENABLED)
         {
             if(door._DoorStatus == DoorStatus.CLOSED)
-            {
                 door._DoorStatus = DoorStatus.OPEN;
-            }
             else if(door._DoorStatus == DoorStatus.OPEN)
-            {
                 door._DoorStatus = DoorStatus.CLOSED;
-            }
         }
     }   
     #endregion

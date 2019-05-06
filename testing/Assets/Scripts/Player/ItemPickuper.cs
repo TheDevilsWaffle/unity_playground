@@ -1,5 +1,7 @@
 ﻿/*///////////////////////////////////////////////////////////////////////////////////////////*/
-/// ItemPickuper.cs
+/// SCRIPT — ItemPickuper
+/// PURPOSE — allow character to pick up an item as long as it is in their list of things they
+///           can pick up. Also, allow thm to place item on attachment points or drop openly
 /*///////////////////////////////////////////////////////////////////////////////////////////*/
 
 using System.Collections;
@@ -43,24 +45,26 @@ public class ItemPickuper : SensorObject
     {
         if (Input.GetKeyDown(interact))
         {
+            //attempt to pickup, if unable then stop, else try to drop something if possible
             if (AttemptPickupItem()) return;
             else AttemptDropItem();
         }
+        //use the 'use key' to try and used a picked up item
         if (Input.GetKeyDown(useItem))
-        {
             AttemptUseItem();
-        }
-
     }
     #endregion
 
     #region METHODS
+    /*///////////////////////////////////////////////////////////////////////////////////////////*/
+    /// <summary>
+    /// if we have an item, use it
+    /// </summary>
+    /*///////////////////////////////////////////////////////////////////////////////////////////*/
     void AttemptUseItem()
     {
         if (currentItem != null)
-        {
             currentItem.GetComponent<Item>().UseItem();
-        }
     }
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
     /// Activate
@@ -70,28 +74,22 @@ public class ItemPickuper : SensorObject
         if (_sensorData.detectee.tag == "Item")
         {
             if (_sensorData.status == SensorStatus.ENTERED || _sensorData.status == SensorStatus.PERSISTS && !IsItemInList(_sensorData.detectee))
-            {
                 items.Add(_sensorData.detectee);
-            }
             else if (_sensorData.status == SensorStatus.EXITED && IsItemInList(_sensorData.detectee))
-            {
                 items.Remove(_sensorData.detectee);
-            }
         }
         if (_sensorData.detectee.tag == "AttachmentPoint")
         {
             if (_sensorData.status == SensorStatus.ENTERED)
-            {
                 attachmentPoint = _sensorData.detectee.GetComponent<AttachmentPoint>();
-            }
             else if (_sensorData.status == SensorStatus.EXITED)
-            {
                 attachmentPoint = null;
-            }
         }
     }
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
-    /// IsItemInList
+    /// <summary>
+    /// check to make sure the item is in our list of approved items
+    /// </summary>
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
     bool IsItemInList(GameObject _go)
     {
@@ -101,34 +99,39 @@ public class ItemPickuper : SensorObject
             return false;
     }
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
-    /// PickupItem
+    /// <summary>
+    /// pick up the item, add to hierarchy, update ui
+    /// </summary>
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
     void PickupItem(bool _worldScalingStays = true)
     {
         if (items.Count >= 1)
         {
+            //add to array of items
             currentItem = items[0];
-            items.Remove(items[0]);
+
+            //set attributes
             currentItem.GetComponent<Item>()._Status = ItemStatus.CARRIED;
             currentItem.GetComponent<Item>()._Owner = this.gameObject;
             TogglePhysics(currentItem, true);
-            // currentItem.transform.localScale = currentItem.GetComponent<Item>().OriginalWorldScale;
-            // print("current" + currentItem.transform.localScale);
-            // print("stored" + currentItem.GetComponent<Item>().OriginalWorldScale);
             currentItem.transform.SetParent(pickupTransform, _worldScalingStays);
             currentItem.transform.localPosition = Vector3.zero;
             currentItem.transform.localRotation = Quaternion.Euler(0, 0, 0);
 
+            //update ui
             UpdatePlayerInventoryUI(currentItem);
         }
     }
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
-    /// DropItem
+    /// <summary>
+    /// drops the current item, updates ui
+    /// </summary>
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
     void DropItem()
     {
         if (currentItem != null)
         {
+            //set attributes
             currentItem.GetComponent<Item>()._Status = ItemStatus.PICKUPABLE;
             currentItem.GetComponent<Item>()._Owner = null;
             TogglePhysics(currentItem, false);
@@ -137,30 +140,36 @@ public class ItemPickuper : SensorObject
             currentItem.GetComponent<Rigidbody>().isKinematic = false;
             currentItem = null;
 
+            //update ui
             UpdatePlayerInventoryUI(null);
         }
     }
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
-    /// PlaceItemOnAttachmentPoint
+    /// <summary>
+    /// places item on an attachment point, updates ui
+    /// </summary>
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
     public void PlaceItemOnAttachmentPoint()
     {
+        //set that item able to be picked up again (this might change in future for items that are
+        // meant to stay in one spot)
         currentItem.GetComponent<Item>()._Status = ItemStatus.PICKUPABLE;
         attachmentPoint.AttachObject(currentItem);
         currentItem = null;
 
+        //update ui
         UpdatePlayerInventoryUI(null);
     }
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
-    /// TogglePhysics
+    /// <summary>
+    /// we don't want physics to get in the way if we're holding, and we want them back on afterwards
+    /// </summary>
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
     void TogglePhysics(GameObject _go, bool _active)
     {
         //run through the guantlet of rigidbody & collider types
         if (_go.GetComponent<Rigidbody>())
-        {
             _go.GetComponent<Rigidbody>().isKinematic = _active;
-        }
         if (_go.GetComponent<BoxCollider>())
         {
             _go.GetComponent<BoxCollider>().isTrigger = _active;
@@ -178,11 +187,13 @@ public class ItemPickuper : SensorObject
         }
     }
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
-    /// AttemptPickupItem
+    /// <summary>
+    /// try to pick up an item
+    /// </summary>
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
     bool AttemptPickupItem()
     {
-        if (currentItem == null && attachmentPoint != null && attachmentPoint.Status == AttachmentStatus.OCCUPIED)
+        if (currentItem == null && attachmentPoint != null && attachmentPoint._Status == AttachmentStatus.OCCUPIED)
         {
             attachmentPoint.DetachObject();
             PickupItem();
@@ -196,25 +207,23 @@ public class ItemPickuper : SensorObject
         return false;
     }
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
-    /// AttemptDropItem
+    /// <summary>
+    /// try to drop an item
+    /// </summary>
     /*///////////////////////////////////////////////////////////////////////////////////////////*/
     void AttemptDropItem()
     {
         if (currentItem != null && attachmentPoint != null)
         {
-            if (attachmentPoint.Status == AttachmentStatus.EMPTY)
-            {
+            if (attachmentPoint._Status == AttachmentStatus.EMPTY)
                 PlaceItemOnAttachmentPoint();
-            }
         }
         else if (currentItem != null)
-        {
             DropItem();
-        }
     }
     /*////////////////////////////////////////////////////////////////////////////////////////////////*/
     /// <summary>
-    /// UpdatePlayerInventoryUI
+    /// send message to ui of what we've got
     /// </summary>
     /*///////////////////////////////////////////////////////////////////////////////////////////////*/
     void UpdatePlayerInventoryUI(GameObject _item)

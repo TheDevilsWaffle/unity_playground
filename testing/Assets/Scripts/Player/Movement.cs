@@ -1,26 +1,40 @@
-﻿using System.Collections;
+﻿/*///////////////////////////////////////////////////////////////////////////////////////////*/
+/// SCRIPT — Movement
+/// PURPOSE — general 8 directional based movement
+///           * accelerate/decelerate based on an animation curve
+///           * uses unity's basic input sytem (keyboard)
+///           * add xinput based input system once it is complete
+/*///////////////////////////////////////////////////////////////////////////////////////////*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    [SerializeField] Transform cam;
-
+    #region PROPERTIES
+    [Header("Camera")]
+    [SerializeField] Transform mainCamera;
+    [Header("Acceleration")]
     [SerializeField] float maxSpeed = 10f;
     [SerializeField] AnimationCurve accelerationCurve;
     [SerializeField] float timeToMaxSpeed = 2f;
+    [Header("Deceleration")]
     [SerializeField] AnimationCurve decelerationCurve;
     [SerializeField] float timeToZeroSpeed = 0.5f;
+    [Header("Rotation")]
     [SerializeField] float turnSpeed = 10f;
-    Quaternion targetRotation;
-    Rigidbody rb;
-
+    
     float currentSpeed = 0;
     float accelerationTimer = 0;
     float decelerationTimer = 0;
     float angle;
     Vector2 input;
-    
+    Quaternion targetRotation;
+    Rigidbody rb;
+    #endregion
+
+    #region INITIALIZATION
     /*////////////////////////////////////////////////////////////////////////////////////////////////*/
     /// <summary>
     /// called when the script instance is being loaded
@@ -28,38 +42,37 @@ public class Movement : MonoBehaviour
     /*///////////////////////////////////////////////////////////////////////////////////////////////*/
     void Awake()
     {
-        AddSubscriptions();
-    }
-    /*////////////////////////////////////////////////////////////////////////////////////////////////*/
-    /// <summary>
-    /// called before the first frame update
-    /// </summary>
-    /*///////////////////////////////////////////////////////////////////////////////////////////////*/
-    void Start()
-    {
         rb = GetComponent<Rigidbody>();
     }
+    #endregion
+
+    #region UPDATE
     /*////////////////////////////////////////////////////////////////////////////////////////////////*/
     /// <summary>
-    /// add GameEvent listeners
+    /// update
     /// </summary>
     /*///////////////////////////////////////////////////////////////////////////////////////////////*/
-    void AddSubscriptions()
+    void Update()
     {
-        //Events.instance.AddListener<EVENT_KEYBOARD_KEY_BROADCAST>(UpdateInput);
+        UpdateInput();
     }
     /*////////////////////////////////////////////////////////////////////////////////////////////////*/
     /// <summary>
-    /// remove GameEvent listeners
+    /// reliable physics update
     /// </summary>
     /*///////////////////////////////////////////////////////////////////////////////////////////////*/
-    void RemoveSubscriptions()
+    void FixedUpdate()
     {
-        //Events.instance.RemoveListener<EVENT_KEYBOARD_KEY_BROADCAST>(UpdateInput);
+        CalculateCurrentSpeed();
+        Rotate();
+        Move();
     }
+    #endregion
+
+    #region METHODS
     /*////////////////////////////////////////////////////////////////////////////////////////////////*/
     /// <summary>
-    /// listen to keyboad key broadcast game event
+    /// get input, calcuate where we are going
     /// </summary>
     /*///////////////////////////////////////////////////////////////////////////////////////////////*/
     void UpdateInput()
@@ -81,11 +94,11 @@ public class Movement : MonoBehaviour
     {
         angle = Mathf.Atan2(input.x, input.y);
         angle = Mathf.Rad2Deg * angle;
-        angle += cam.eulerAngles.y;
+        angle += mainCamera.eulerAngles.y;
     }
     /*////////////////////////////////////////////////////////////////////////////////////////////////*/
     /// <summary>
-    /// rotate
+    /// rotatation
     /// </summary>
     /*///////////////////////////////////////////////////////////////////////////////////////////////*/
     void Rotate()
@@ -95,7 +108,7 @@ public class Movement : MonoBehaviour
     }
     /*////////////////////////////////////////////////////////////////////////////////////////////////*/
     /// <summary>
-    /// actually move
+    /// actually move (several types of movement to choose from (read directions))
     /// </summary>
     /*///////////////////////////////////////////////////////////////////////////////////////////////*/
     void Move()
@@ -125,7 +138,7 @@ public class Movement : MonoBehaviour
     }
     /*////////////////////////////////////////////////////////////////////////////////////////////////*/
     /// <summary>
-    /// description
+    /// return how fast/slow we are going
     /// </summary>
     /*///////////////////////////////////////////////////////////////////////////////////////////////*/
     void CalculateCurrentSpeed()
@@ -157,33 +170,5 @@ public class Movement : MonoBehaviour
         }
         //print("current speed = " + currentSpeed);
     }
-    /*////////////////////////////////////////////////////////////////////////////////////////////////*/
-    /// <summary>
-    /// late update
-    /// </summary>
-    /*///////////////////////////////////////////////////////////////////////////////////////////////*/
-    void Update()
-    {
-        UpdateInput();
-    }
-    /*////////////////////////////////////////////////////////////////////////////////////////////////*/
-    /// <summary>
-    /// called every fixed framerate frame, if the MonoBehaviour is enabled.
-    /// </summary>
-    /*///////////////////////////////////////////////////////////////////////////////////////////////*/
-    void FixedUpdate()
-    {
-        CalculateCurrentSpeed();
-        Rotate();
-        Move();
-    }
-    /*////////////////////////////////////////////////////////////////////////////////////////////////*/
-    /// <summary>
-    /// called when the MonoBehaviour will be destroyed
-    /// </summary>
-    /*///////////////////////////////////////////////////////////////////////////////////////////////*/
-    void OnDestroy()
-    {
-        RemoveSubscriptions();
-    }
+    #endregion
 }

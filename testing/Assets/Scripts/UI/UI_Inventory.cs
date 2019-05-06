@@ -1,27 +1,41 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿/*///////////////////////////////////////////////////////////////////////////////////////////*/
+/// SCRIPT — UI_Inventory
+/// PURPOSE — display what item the player is currently holding
+/// TODO — lots, like make it pretty and more useful
+/*///////////////////////////////////////////////////////////////////////////////////////////*/
+
 using UnityEngine;
 using TMPro;
 
 public class UI_Inventory : MonoBehaviour
 {
+    #region PROPERTIES
     [SerializeField] GameObject player;
     [SerializeField] TMP_Text currentInventoryText;
-    
+    #endregion
 
+    #region INITIALIZATION
+    /*///////////////////////////////////////////////////////////////////////////////////////////*/
     /// <summary>
-    /// Called when the script is loaded or a value is changed in the
-    /// inspector (Called in the editor only).
+    /// update attributes in inspector
     /// </summary>
+    /*///////////////////////////////////////////////////////////////////////////////////////////*/
     void OnValidate()
     {
         currentInventoryText.text = "empty";
     }
+    /*///////////////////////////////////////////////////////////////////////////////////////////*/
+    /// <summary>
+    /// called upon script enable
+    /// </summary>
+    /*///////////////////////////////////////////////////////////////////////////////////////////*/
     void Awake()
     {
         OnValidate();
         SetSubscriptions();
     }
+    #endregion
+
     #region SUBSCRIPTIONS
     ///////////////////////////////////////////////////////////////////////////////////////////////////
     /// <summary>
@@ -42,7 +56,13 @@ public class UI_Inventory : MonoBehaviour
         Events.instance.RemoveListener<EVENT_UI_INVENTORY_UPDATE>(UpdateInventory);
     }
     #endregion
+
     #region METHODS
+    /*///////////////////////////////////////////////////////////////////////////////////////////*/
+    /// <summary>
+    /// update text in inventory HUD based on what is passed to it, otherwise say "empty"
+    /// </summary>
+    /*///////////////////////////////////////////////////////////////////////////////////////////*/
     void UpdateInventory(EVENT_UI_INVENTORY_UPDATE _event)
     {
         if(_event.player == player)
@@ -50,16 +70,17 @@ public class UI_Inventory : MonoBehaviour
             if(_event.item != null)
                 currentInventoryText.text = _event.item.name;
             else
-            {
                 currentInventoryText.text = "empty";
-            }
         }
     }
     #endregion
+
     #region DESTROY
+    /*///////////////////////////////////////////////////////////////////////////////////////////*/
     /// <summary>
     /// This function is called when the MonoBehaviour will be destroyed.
     /// </summary>
+    /*///////////////////////////////////////////////////////////////////////////////////////////*/
     void OnDestroy()
     {
         RemoveSubscriptions();
